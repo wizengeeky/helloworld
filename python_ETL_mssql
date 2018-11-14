@@ -1,0 +1,38 @@
+import csv
+import pymssql
+
+conn = pymssql.connect(
+    server="ip_address",
+    port = port,
+    user='userid',
+    password='<dummyplaceholder>',
+    database='dbname'
+)
+
+cursor = conn.cursor()
+customer_data = csv.reader('cleanNVG.csv') #25 columns with same header as SQL
+
+for row in customer_data:
+    cursor.execute('INSERT INTO scaleout.t_MasterRecipe([ITEM_ID]\
+		, [PLANT]\
+		, [STATUS]\
+		, [WORK_CENTER]\
+		, [BASE_QTY]\
+		, [BASE_QTY_UOM]\
+		, [Std_Val_Run]\
+		, [Unit_Run]\
+		, [Std_Val_Labor]\
+		, [Unit_Labor]\
+		, [Act]\
+		, [RECIPE_GROUP]\
+		, [GRC]\
+		, [LOAD_DATE]\
+		, [WORK_CENTER_DESCRIPTION]\
+		, [CHARACTERISTIC_VALUE]\
+		, [CHARACTERISTIC_NAME]\
+		, [CLASS]\
+		, [STEUS])''VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,)',row)
+conn.commit()
+cursor.close()
+print("Done")
+conn.close()
